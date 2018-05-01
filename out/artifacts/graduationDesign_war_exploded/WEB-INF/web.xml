@@ -25,64 +25,33 @@
 
 
 
-    <servlet><!--servlet类路径配置-->
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.servlet.LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>com.servlet.RegisterServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Searchall</servlet-name>
-        <servlet-class>com.servlet.Searchall</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DeleteServlet</servlet-name>
-        <servlet-class>com.servlet.DeleteServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateServlet</servlet-name>
-        <servlet-class>com.servlet.UpdateServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateMyServlet</servlet-name>
-        <servlet-class>com.servlet.UpdateMyServlet</servlet-class>
-    </servlet>
+
     <servlet>
         <servlet-name>UserManage</servlet-name>
         <servlet-class>com.servlet.UserManage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>QuestionManage</servlet-name>
+        <servlet-class>com.servlet.QuestionManage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OptionManage</servlet-name>
+        <servlet-class>com.servlet.OptionManage</servlet-class>
+    </servlet>
 
 
-
-    <servlet-mapping><!--servlet类映射配置-->
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/RegisterServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Searchall</servlet-name>
-        <url-pattern>/Searchall</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DeleteServlet</servlet-name>
-        <url-pattern>/DeleteServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UpdateServlet</servlet-name>
-        <url-pattern>/UpdateServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UpdateMyServlet</servlet-name>
-        <url-pattern>/UpdateMyServlet</url-pattern>
-    </servlet-mapping>
+    <!--servlet类映射配置-->
     <servlet-mapping>
         <servlet-name>UserManage</servlet-name>
         <url-pattern>/UserManage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QuestionManage</servlet-name>
+        <url-pattern>/QuestionManage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OptionManage</servlet-name>
+        <url-pattern>/OptionManage</url-pattern>
     </servlet-mapping>
 
 

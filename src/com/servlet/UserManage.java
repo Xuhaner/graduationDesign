@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 public class UserManage extends HttpServlet{
@@ -74,7 +75,7 @@ public class UserManage extends HttpServlet{
                 response.sendRedirect("fail.jsp");
             }
         }else if("DeleteUser".equals(op)){
-            Long u_id = Long.valueOf(request.getParameter("u_id"));
+            int u_id = Integer.parseInt(request.getParameter("u_id"));
             UserDao ud = DAOFactory.getUserDAO();
 
             boolean result = ud.delete(u_id);
@@ -85,6 +86,22 @@ public class UserManage extends HttpServlet{
                 response.sendRedirect("fail.jsp");
             }
 
+        }else if("Login".equals(op)) {
+            HttpSession session = request.getSession();
+
+            String u_name = request.getParameter("u_name"); //得到jsp页面传过来的参数
+            String u_pwd = request.getParameter("u_pwd");
+
+            UserDao ud = new UserDaoImpl();
+
+            if (ud.login(u_name, u_pwd)) {
+
+                session.setAttribute("uname", "欢迎用户" + u_name); //向request域中放置信息
+                //response.sendRedirect("/myHome.jsp");
+                request.getRequestDispatcher("/myHome.jsp").forward(request, response);//转发到成功页面
+            } else {
+                response.sendRedirect("login.jsp"); //重定向到登录页面
+            }
         }
     }
 }

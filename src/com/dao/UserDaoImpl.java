@@ -104,7 +104,7 @@ public class UserDaoImpl implements UserDao{
             DBconn.closeConn();
         }
     }
-    public boolean delete(long id) {
+    public boolean delete(int id) {
         boolean flag = false;
         DBconn.init();
         String sql = "delete  from user where u_id="+id;

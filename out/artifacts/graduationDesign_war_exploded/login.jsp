@@ -13,7 +13,7 @@
 </head>
 <body>
 <div></div>
-<form action="LoginServlet"  method="post"  style="padding-top:-700px;">
+<form action="UserManage?op=Login"  method="post"  style="padding-top:-700px;">
   用户名：<input type="text" name="u_name" value=""><br><br>
   密码：  <input type="password" name="u_pwd" value=""><br><br>
   <input type="submit" value="登录" name="login"><input type="reset" value="重置"><br>

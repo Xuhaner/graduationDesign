@@ -95,10 +95,10 @@ public class QuestionDaoImpl implements QuestionDao{
             DBconn.closeConn();
         }
     }
-    public boolean deleteQuestion(int id) {
+    public boolean deleteQuestion(int questionId) {
         boolean flag = false;
         DBconn.init();
-        String sql = "delete  from question where q_id="+id;
+        String sql = "delete  from question where q_id="+questionId;
         int i =DBconn.addUpdDel(sql);
         if(i>0){
             flag = true;
@@ -106,18 +106,19 @@ public class QuestionDaoImpl implements QuestionDao{
         DBconn.closeConn();
         return flag;
     }
-    public List<Question> listQuestions(String WhereClause){
 
-    }
-    public List<Question> listAllQuestion(Long surveyId){
-
-    }
-    public List<Question> listAllQuestion(int qId,String ascORdesc){
-        return this.listAllQuestion(qId, "asc");
-    }
-    public User searchQuestion(String username) {
-        boolean flag = false;
-        User user = new User();
-        return user;
-    }
+//    public List<Question> listQuestions(String WhereClause){
+//        boolean flag = false;
+//    }
+//    public List<Question> listAllQuestion(Long surveyId){
+//        boolean flag = false;
+//    }
+//    public List<Question> listAllQuestion(int qId,String ascORdesc){
+//        return this.listAllQuestion(qId, "asc");
+//    }
+//    public User searchQuestion(String username) {
+//        boolean flag = false;
+//        User user = new User();
+//        return user;
+//    }
 }

@@ -1,24 +1,23 @@
 package com.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.entity.Question;
 
 public interface QuestionDao {
 
-    public boolean addQuestion(Question question);//注册
+    public boolean addQuestion(Question question) throws SQLException;//注册
 
-   // public List<Question> getQuestionAll();//返回用户信息集合
+    public boolean deleteQuestion(int questionId) throws SQLException;//根据id删除用户
 
-    public boolean deleteQuesiton(int questionId);//根据id删除用户
+    public boolean updateQuestion(int question) throws SQLException;//更新用户信息
 
-    public boolean deleteOption(int optionId);
+//    public boolean deleteOption(int optionId);
 
-    public boolean updateQuestion(Question question);//更新用户信息
+//    List<Question> listQuestions(String WhereClause);
+//    List<Question> listAllQuestion(Long surveyId);
+//    List<Question> listAllQuestion(int qId,String ascORdesc);
 
-    List<Question> listQuestions(String WhereClause);
-    List<Question> listAllQuestion(Long surveyId);
-    List<Question> listAllQuestion(int qId,String ascORdesc);
-
-    public Question findQuestion(Long questionId);
+//    public Question findQuestion(int questionId);
 }

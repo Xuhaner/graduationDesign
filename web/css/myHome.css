@@ -1,0 +1,19 @@
+a{
+    text-decoration: none;
+}
+
+#topBar{
+    background-color: #87cefa;
+}
+
+#main{
+    border: 1px solid;
+    height: 300px;
+}
+
+#leftBar{
+    width: 30%;
+    float: left;
+    border: 1px solid;
+    text-align: center;
+}

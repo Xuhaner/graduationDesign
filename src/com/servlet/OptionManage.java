@@ -1,4 +1,7 @@
 package com.servlet;
 
-public class OptionManage {
+
+import javax.servlet.http.HttpServlet;
+
+public class OptionManage extends HttpServlet {
 }

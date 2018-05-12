@@ -82,7 +82,6 @@ public class QuestionDaoImpl implements QuestionDao{
             pstmt.setBoolean(5, question.getQIsRepeat());
             pstmt.setString(6, question.getQPassword());
             pstmt.setBoolean(7, question.getQIsOpen());
-
             pstmt.setInt(8, question.getQAnswer());
             return pstmt.executeUpdate()==1?true:false;
 

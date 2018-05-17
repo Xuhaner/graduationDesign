@@ -14,4 +14,8 @@ public class DAOFactory {
     public static QuestionDao getQuestionDAO(){
         return new QuestionDaoImpl();
     }
+
+    public static OptionDao getOptionDAO(){
+        return new OptionDaoImpl();
+    }
 }

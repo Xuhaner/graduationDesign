@@ -3,6 +3,20 @@ package com.entity;
 import java.util.Date;
 
 public class Question {
+
+    private int QId;
+    private String QName;
+    private String QDesc;
+    private String QAuthor;
+    private Boolean QIsRepeat;
+    private Date QCreateDate;
+    private String QPassword;
+    private Boolean QIsOpen;
+    private Date QExpireDate;
+    private int QHits;
+    private int QAnswer;
+    private String team;
+
     public int getQId() {
         return QId;
     }
@@ -91,15 +105,11 @@ public class Question {
         this.QAnswer = QAnswer;
     }
 
-    private int QId;
-    private String QName;
-    private String QDesc;
-    private String QAuthor;
-    private Boolean QIsRepeat;
-    private Date QCreateDate;
-    private String QPassword;
-    private Boolean QIsOpen;
-    private Date QExpireDate;
-    private int QHits;
-    private int QAnswer;
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
 }

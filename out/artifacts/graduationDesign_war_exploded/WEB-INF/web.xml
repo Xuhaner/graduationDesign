@@ -23,9 +23,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
-
-
     <servlet>
         <servlet-name>UserManage</servlet-name>
         <servlet-class>com.servlet.UserManage</servlet-class>

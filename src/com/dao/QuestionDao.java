@@ -11,7 +11,7 @@ public interface QuestionDao {
 
     public boolean deleteQuestion(int questionId) throws SQLException;//根据id删除用户
 
-    public boolean updateQuestion(int question) throws SQLException;//更新用户信息
+    public boolean updateQuestion(Question question) throws SQLException;//更新用户信息
 
 //    public boolean deleteOption(int optionId);
 
@@ -19,5 +19,5 @@ public interface QuestionDao {
 //    List<Question> listAllQuestion(Long surveyId);
 //    List<Question> listAllQuestion(int qId,String ascORdesc);
 
-//    public Question findQuestion(int questionId);
+    public Question findQuestion(int questionId);
 }

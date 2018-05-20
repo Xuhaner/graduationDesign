@@ -59,6 +59,26 @@ public class DBconn {
             e.printStackTrace();
         }
     }
+
+//    public RowSet queryRowSet(String sql) {
+//        Connection conn=this.init();
+//        ResultSet rs=null;
+//        Statement stmt=null;
+//        try {
+//            stmt=conn.createStatement();
+//            rs=stmt.executeQuery(sql);
+//            CachedRowSet crs=new CachedRowSetImpl();
+//            crs.populate(rs);
+//
+//            return crs;
+//        } catch (SQLException e) {
+//
+//            e.printStackTrace();
+//
+//            return null;
+//        }
+//    }
+
     public static void closeConn(){
         try {
             conn.close();

@@ -1,5 +1,6 @@
 package com.dao;
 
+import java.awt.desktop.QuitStrategy;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,28 +45,45 @@ public class QuestionDaoImpl implements QuestionDao{
             DBconn.closeConn();
         }
     }
-    //    public List<User> getUserAll() {
-//        List<User> list = new ArrayList<User>();
-//        try {
-//            DBconn.init();
-//            ResultSet rs = DBconn.selectSql("select * from user");
-//            while(rs.next()){
-//                User user = new User(u_id, u_name, u_pwd, u_email, u_team, u_createTime);
-//                user.setId(rs.getInt("u_id"));
-//                user.setName(rs.getString("name"));
-//                user.setPwd(rs.getString("pwd"));
-//                user.setSex(rs.getString("sex"));
-//                user.setEmail(rs.getString("email"));
-//                list.add(user);
-//            }
-//            DBconn.closeConn();
-//            return list;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-    public boolean updateQuestion(int questionId) throws SQLException {
+
+    public List<Question> listAllQuestion(String order) {
+        //wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong
+        DBconn.init();
+        ResultSet rs= DBconn.selectSql("select * from question order by "+order);
+        List<Question> list=new ArrayList<Question>();
+        Question question;
+        try {
+            while(rs.next()){
+                question =new Question();
+                question.setQId(rs.getInt("q_id"));
+                question.setQName(rs.getString("s_name"));
+                question.setQDesc(rs.getString("s_desc"));
+                question.setQAuthor(rs.getString("s_author"));
+
+                //question.setCreateDate(rs.getDate("s_createdate"));
+                //question.setSIpLimitType(rs.getString("s_iplimittype"));
+                //question.setIpRange(rs.getString("s_ipRange"));
+
+                //question.setSPassword(rs.getString("s_password"));
+                //question.setIsOpen(rs.getBoolean("s_isopen"));
+                //question.setSExpireDate(rs.getDate("s_expiredate"));
+               // question.setSIsAudited(rs.getBoolean("s_isaudited"));
+                //question.setSHits(rs.getLong("s_hits"));
+                //question.setSUsehits(rs.getLong("s_usehits"));
+
+                list.add(question);
+            }
+
+            return list;
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    public boolean updateQuestion(Question questionId) throws SQLException {
         boolean flag = false;
         Connection conn = DBconn.init();
         PreparedStatement pstmt = null;
@@ -104,6 +122,11 @@ public class QuestionDaoImpl implements QuestionDao{
         }
         DBconn.closeConn();
         return flag;
+    }
+
+    public Question findQuestion(int questionID){
+        Question question = new Question();
+        return question;
     }
 
 //    public List<Question> listQuestions(String WhereClause){

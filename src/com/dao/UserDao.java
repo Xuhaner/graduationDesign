@@ -12,4 +12,7 @@ public interface UserDao {
     public boolean delete(int id) ;//根据id删除用户
     public boolean update(User user) throws SQLException;//更新用户信息
     public User searchUser(String username);
+
+    //public boolean addTeam(int num);//num - the number of team
+
 }

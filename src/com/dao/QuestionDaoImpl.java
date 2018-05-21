@@ -1,146 +1,195 @@
 package com.dao;
 
-import java.awt.desktop.QuitStrategy;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.entity.Question;
-import com.entity.User;
-import com.util.DBconn;
-
-import javax.sql.RowSet;
+import com.util.DBConnection;
 
 public class QuestionDaoImpl implements QuestionDao{
 
-    private List<Question> list_question=null;
-
-    public boolean addQuestion(Question question) throws SQLException {
-        Connection conn = DBconn.init();
-        PreparedStatement pstmt=null;
-        String sql = "insert into question(q_id,q_name,q_desc,q_author,q_IsRepeat,q_pwd,q_isOpean,q_hits,q_answer) values(?,?,?,?,?,?,?,?,?)";
+    //根据问卷的编号查找该属于该问卷的题目
+    public List<Question> litQuesByOid(int oid) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        List<Question> quesList=new LinkedList<Question>();
+        String sql = "select seq,content,qtype from wj_question where oid='"
+                + oid + "' order by seq asc";
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, question.getQId());
-            pstmt.setString(2, question.getQName());
-            pstmt.setString(3, question.getQDesc());
-            pstmt.setString(4, question.getQAuthor());
-            pstmt.setBoolean(5, question.getQIsRepeat());
-            pstmt.setString(6, question.getQPassword());
-            pstmt.setBoolean(7, question.getQIsOpen());
-            pstmt.setInt(8, question.getQAnswer());
-
-            return pstmt.executeUpdate()==1?true:false;
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            return false;
-        }finally{
-            pstmt.close();
-            DBconn.closeConn();
-        }
-    }
-
-    public List<Question> listAllQuestion(String order) {
-        //wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong wrong
-        DBconn.init();
-        ResultSet rs= DBconn.selectSql("select * from question order by "+order);
-        List<Question> list=new ArrayList<Question>();
-        Question question;
-        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            rs = stm.executeQuery(sql);
             while(rs.next()){
-                question =new Question();
-                question.setQId(rs.getInt("q_id"));
-                question.setQName(rs.getString("s_name"));
-                question.setQDesc(rs.getString("s_desc"));
-                question.setQAuthor(rs.getString("s_author"));
-
-                //question.setCreateDate(rs.getDate("s_createdate"));
-                //question.setSIpLimitType(rs.getString("s_iplimittype"));
-                //question.setIpRange(rs.getString("s_ipRange"));
-
-                //question.setSPassword(rs.getString("s_password"));
-                //question.setIsOpen(rs.getBoolean("s_isopen"));
-                //question.setSExpireDate(rs.getDate("s_expiredate"));
-               // question.setSIsAudited(rs.getBoolean("s_isaudited"));
-                //question.setSHits(rs.getLong("s_hits"));
-                //question.setSUsehits(rs.getLong("s_usehits"));
-
-                list.add(question);
+                Question ques=new Question();
+                int seq=rs.getInt("seq");
+                int qtype=rs.getInt("qtype");
+                String content=rs.getString("content");
+                ques.setContent(content);
+                ques.setSeq(seq);
+                ques.setQtype(qtype);
+                quesList.add(ques);
             }
-
-            return list;
-
-        } catch (SQLException e) {
-
+            return quesList;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
+        } finally {
+            dbcon.closeAll(con, stm, rs);
         }
-
     }
-    public boolean updateQuestion(Question questionId) throws SQLException {
-        boolean flag = false;
-        Connection conn = DBconn.init();
-        PreparedStatement pstmt = null;
-        // 没写完
-        String sql = "update question.(q_id,q_name,q_desc,q_author,q_IsRepeat,q_pwd,q_isOpean,q_expireDate,q_hits,q_answer) values(?,?,?,?,?,?,?,?,?,?) where q_id=?" + questionId;
-        Question question = new Question();
+    public int addQues(int oid, String content, int qtype, int seq) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        String sql = "insert into wj_question(oid,content,qtype,seq) values('"
+                + oid + "','" + content + "','" + qtype + "','"
+                + seq + "')";
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, question.getQId());
-            pstmt.setString(2, question.getQName());
-            pstmt.setString(3, question.getQDesc());
-            pstmt.setString(4, question.getQAuthor());
-            pstmt.setBoolean(5, question.getQIsRepeat());
-            pstmt.setString(6, question.getQPassword());
-            pstmt.setBoolean(7, question.getQIsOpen());
-            pstmt.setInt(8, question.getQAnswer());
-            return pstmt.executeUpdate()==1?true:false;
-
-        } catch (SQLException e) {
-
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            int i = stm.executeUpdate(sql);
+            return i;
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return 0;
+        } finally {
+            dbcon.closeAll(con,stm,rs);
+        }
+    }
+
+    //	 插入题目前先修改题目表的题目顺序号
+    public int updateQuesOrder(int oid, int seq) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        String sql = "update wj_question set seq=(seq + 1) where oid = '" + oid
+                + "'and seq > '" + seq + "'";
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            int i = stm.executeUpdate(sql);
+            return i;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            dbcon.closeAll(con, stm, rs);
+        }
+    }
+
+
+    //	 编辑题目的时候 先的到它的题目TITLE ,选项类型,选项内容
+    public Question getQuesBySeq(int seq, int oid) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        Question ques=new Question();
+        String sql = "select content,qtype from wj_question where oid = '" + oid
+                + "' and seq = '" + seq + "'";
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            rs = stm.executeQuery(sql);
+            while(rs.next()){
+                String content=rs.getString("content");
+                int qtype=rs.getInt("qtype");
+                ques.setContent(content);
+                ques.setQtype(qtype);
+
+
+            }
+            return ques;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            dbcon.closeAll(con,stm,rs);
+        }
+    }
+
+    //	 根据传进来的问卷编号和试题的顺序号 删除题目
+    public int deleteQues(int seq, int oid) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        int count=0;
+        String sql = "delete  from wj_question where oid=" + oid + " and seq = "+ seq ;
+        System.out.println(sql);
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            count = stm.executeUpdate(sql);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+            dbcon.closeAll(con,stm,rs);
+        }
+        return count;
+    }
+
+    //	 根据传进来的问卷编号和题目的序号 修改题目表中题目的顺序
+    public int updateQseq(int seq, int oid) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        int count=0;
+        String sql = "update wj_question set seq=(seq-1) where oid = " + oid+ " and seq > " + seq ;
+        System.out.println(sql);
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            count = stm.executeUpdate(sql);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            dbcon.closeAll(con, stm, rs);
+        }
+        return count;
+
+    }
+
+    // 得到问题的总数
+    public int getQuesCount(int oid) {
+        DBConnection dbcon = null;
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+        int qcount = 0;
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            stm=con.createStatement();
+            String sql = "select count(*) from wj_question where oid=" + oid;
+            rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                qcount = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }finally{
-            pstmt.close();
-            DBconn.closeConn();
+            dbcon.closeAll(con, stm, rs);
         }
+        System.out.println("问题的总数" + qcount);
+        return qcount;
     }
-    public boolean deleteQuestion(int questionId) {
-        boolean flag = false;
-        DBconn.init();
-        String sql = "delete  from question where q_id="+questionId;
-        int i =DBconn.addUpdDel(sql);
-        if(i>0){
-            flag = true;
-        }
-        DBconn.closeConn();
-        return flag;
-    }
-
-    public Question findQuestion(int questionID){
-        Question question = new Question();
-        return question;
-    }
-
-//    public List<Question> listQuestions(String WhereClause){
-//        boolean flag = false;
-//    }
-//    public List<Question> listAllQuestion(Long surveyId){
-//        boolean flag = false;
-//    }
-//    public List<Question> listAllQuestion(int qId,String ascORdesc){
-//        return this.listAllQuestion(qId, "asc");
-//    }
-//    public User searchQuestion(String username) {
-//        boolean flag = false;
-//        User user = new User();
-//        return user;
-//    }
 }

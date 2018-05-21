@@ -15,7 +15,17 @@ public class DAOFactory {
         return new QuestionDaoImpl();
     }
 
-    public static OptionDao getOptionDAO(){
-        return new OptionDaoImpl();
+    public static ObjectBeanDao getObjectBeanDAO(){
+        return new ObjectBeanDaoImpl();
     }
+
+    public static RepalyDao getRepalyDAO(){
+        return new ReplayDaoImpl();
+    }
+
+    public static SelectDao getSelectDAO(){
+        return new SelectDaoImpl();
+    }
+
+
 }

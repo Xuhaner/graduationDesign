@@ -3,121 +3,126 @@ package com.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Statement;
 
 import com.entity.User;
-import com.util.DBconn;
+import com.util.MD5Util;
+import com.util.DBConnection;
 
 import javax.sql.RowSet;
 
 public class UserDaoImpl implements UserDao{
 
-    public boolean register(User user) throws SQLException {
-//        boolean flag = false;
-//        DBconn.init();
-//        int i = DBconn.addUpdDel("insert into user(u_name,u_pwd,u_email,u_team) " +
-//                "values('"+user.getU_name()+"','"+user.getU_pwd()+"','"+user.getU_email()+"','"+user.getU_email()+"')");
-//        System.out.println("insert into user(u_name,u_pwd,u_email,u_team) " +
-//                "values('"+user.getU_name()+"','"+user.getU_pwd()+"','"+user.getU_email()+"','"+user.getU_email()+"')");
-//        if(i>0){
-//            flag = true;
-//        }
-//        DBconn.closeConn();
-//        return flag;
+    public boolean register(String username,String password,String teamname) throws Exception {
+        DBConnection db = new DBConnection();
+        Connection con=null;
+        PreparedStatement stmt=null;
+        ResultSet rs = null;
+        String sql = "";
 
-        Connection conn = DBconn.init();
-        PreparedStatement pstmt=null;
-        String sql = "insert into user(u_name,u_pwd,u_email,u_team) values(?,?,?,?)";
+        String md5Psw = MD5Util.MD5Encrypt(password);
+
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, user.getU_name());
-            pstmt.setString(2, user.getU_pwd());
-            pstmt.setString(3, user.getU_email());
-            pstmt.setString(4, user.getU_team());
+            con = db.getConnection();
+            sql = "insert into wj_admins(username,password,team) values(?,?,?)";
+            System.out.println(sql);
+            stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, username);
+            stmt.setString(2, md5Psw);
+            stmt.setString(3, teamname);
 
-
-            return pstmt.executeUpdate()==1?true:false;
-
-        } catch (SQLException e) {
-
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
-        }finally{
-            pstmt.close();
-            DBconn.closeConn();
+        } finally {
+            db.closeAll(con, stmt,rs);
         }
+
+        return true;
     }
-    public boolean login(String u_name, String u_pwd) {
-        boolean flag = false;
+
+    public User login(String username,String password,String teamname) throws Exception{
+        DBConnection dbcon = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        User user=new User();
+        String md5Psw = MD5Util.MD5Encrypt(password);
+        String sql = "select * from wj_admins where username =? and password =? and team=?";//防止SQL注入
         try {
-            DBconn.init();
-            ResultSet rs = DBconn.selectSql("select * from user where u_name='"+u_name+"' and u_pwd='"+u_pwd+"'");
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, md5Psw);
+            ps.setString(3, teamname);
+            rs = ps.executeQuery();
             while(rs.next()){
-                if(rs.getString("u_name").equals(u_name) && rs.getString("u_pwd").equals(u_pwd)){
-                    flag = true;
-                }
+                String uname=rs.getString("username");
+                String pwd=rs.getString("password");
+                String tname=rs.getString("team");
+                user.setPassword(pwd);
+                user.setUsername(uname);
+                user.setTeam(tname);
             }
-            DBconn.closeConn();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return flag;
-    }
-//    public List<User> getUserAll() {
-//        List<User> list = new ArrayList<User>();
-//        try {
-//            DBconn.init();
-//            ResultSet rs = DBconn.selectSql("select * from user");
-//            while(rs.next()){
-//                User user = new User(u_id, u_name, u_pwd, u_email, u_team, u_createTime);
-//                user.setId(rs.getInt("u_id"));
-//                user.setName(rs.getString("name"));
-//                user.setPwd(rs.getString("pwd"));
-//                user.setSex(rs.getString("sex"));
-//                user.setEmail(rs.getString("email"));
-//                list.add(user);
-//            }
-//            DBconn.closeConn();
-//            return list;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-    public boolean update(User user) throws SQLException {
-        boolean flag = false;
-        Connection conn = DBconn.init();
-        PreparedStatement pstmt = null;
-        String sql = "UPDATE admins set a_user=?,a_pass=? where a_id=?";
-        try {
-            pstmt = conn.prepareStatement(sql);
-            return pstmt.executeUpdate()==1?true:false;
 
-        } catch (SQLException e) {
-
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
-        }finally{
-            pstmt.close();
-            DBconn.closeConn();
+
+        } finally {
+            dbcon.closeAll(con, ps, rs);
         }
-    }
-    public boolean delete(int id) {
-        boolean flag = false;
-        DBconn.init();
-        String sql = "delete  from user where u_id="+id;
-        int i =DBconn.addUpdDel(sql);
-        if(i>0){
-            flag = true;
-        }
-        DBconn.closeConn();
-        return flag;
-    }
-    public User searchUser(String username) {
-        boolean flag = false;
-        User user = new User();
         return user;
+    }
+
+
+    public String getOldPsw(String username){
+        DBConnection dbcon = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String psw ="";
+        String	sql = "select * from wj_admins where username =?";
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                psw=rs.getString("password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dbcon.closeAll(con, ps, rs);
+        }
+        return psw;
+    }
+
+    public boolean updatePassword(String username,String newpsw) throws Exception{
+        DBConnection dbcon = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean flag = false;
+        String md5Psw = MD5Util.MD5Encrypt(newpsw);
+        String	sql = "update wj_admins set password = ? where username = ?";
+        System.out.println(sql);
+        try {
+            dbcon=new DBConnection();
+            con=dbcon.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.setString(1, md5Psw);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            flag=true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dbcon.closeAll(con, ps, rs);
+        }
+        return flag;
     }
 }

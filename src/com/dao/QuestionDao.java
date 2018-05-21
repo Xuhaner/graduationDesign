@@ -7,17 +7,12 @@ import com.entity.Question;
 
 public interface QuestionDao {
 
-    public boolean addQuestion(Question question) throws SQLException;//注册
+    public List<Question> litQuesByOid(int oid);
+    public int addQues(int oid, String content, int qtype, int seq);
+    public int updateQuesOrder(int oid, int seq);
+    public Question getQuesBySeq(int seq, int oid);
+    public int deleteQues(int seq, int oid);
+    public int updateQseq(int seq, int oid);
+    public int getQuesCount(int oid);
 
-    public boolean deleteQuestion(int questionId) throws SQLException;//根据id删除用户
-
-    public boolean updateQuestion(Question question) throws SQLException;//更新用户信息
-
-//    public boolean deleteOption(int optionId);
-
-//    List<Question> listQuestions(String WhereClause);
-//    List<Question> listAllQuestion(Long surveyId);
-//    List<Question> listAllQuestion(int qId,String ascORdesc);
-
-    public Question findQuestion(int questionId);
 }

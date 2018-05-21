@@ -1,0 +1,15 @@
+body				{margin:0px; font-size:12px; backgroud-color: rgb(236, 248, 245);}
+td, div				{font-size:12px;}
+#login a			{text-decoration:none;}
+#login .textbox		{width:180px}
+#login .btnLogin
+{
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	padding: 0px;
+	font-size: 12px;
+	height: 21px;
+	width: 78px;
+}

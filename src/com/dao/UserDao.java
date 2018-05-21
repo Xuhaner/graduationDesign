@@ -6,13 +6,8 @@ import java.util.List;
 import com.entity.User;
 
 public interface UserDao {
-    public boolean login(String name,String pwd);//登录
-    public boolean register(User user) throws SQLException;//注册
-//    public List<User> getUserAll();//返回用户信息集合
-    public boolean delete(int id) ;//根据id删除用户
-    public boolean update(User user) throws SQLException;//更新用户信息
-    public User searchUser(String username);
-
-    //public boolean addTeam(int num);//num - the number of team
-
+    public User login(String name,String pwd,String team)throws Exception;//登录
+    public boolean register(String username,String password,String teamname) throws Exception;//注册
+    public String getOldPsw(String username);
+    public boolean updatePassword(String username,String newpsw) throws Exception;
 }
